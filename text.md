@@ -19,3 +19,5 @@
   -- Cách dùng là : 1. .env(Chấm là bỏ qua 1 file)
   -- Cách dùng là : 2. node_modules/(Gạch sau là bỏ qua 1 thư mục)
   // Middleware là các “lớp trung gian” dùng để xử lý logic giữa client và server như xác thực, ghi log, xử lý lỗi, hay biến đổi dữ liệu.
+  // Nghiệp vụ thực tế và nhánh main là chủ tạo ra
+  // Đầu tiên là checkout develop (git checkout -b develop là tạo nhánh mới trong git ) là chuyển nhánh và dấu \* là những thay đổi chưa được lưu
