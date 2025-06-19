@@ -4,6 +4,7 @@ import {
   deleteCategory,
   getDetailCategory,
   getListCategory,
+  restoreCategory,
   softDeleteCategory,
   updateCategory,
 } from "../category/category.controllers.js";
@@ -17,6 +18,7 @@ categoryRoutes.get("/", getListCategory);
 categoryRoutes.get("/:id", getDetailCategory);
 categoryRoutes.delete("/:id", deleteCategory);
 categoryRoutes.delete("/soft-delete/:id", softDeleteCategory);
+categoryRoutes.patch("/restore/:id", restoreCategory);
 
 categoryRoutes.use(valiBodyRequest(categorySchema));
 categoryRoutes.post("/", createCategory);

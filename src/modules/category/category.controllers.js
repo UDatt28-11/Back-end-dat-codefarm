@@ -1,8 +1,7 @@
-import Category from "./Category.model.js";
+import Category from "./category.model.js";
 import createError from "../../common/utils/error.js";
 import handleAsync from "../../common/utils/handleAsync.js";
 import createResponse from "../../common/utils/response.js";
-import findByIdCategory from "./category.service.js";
 import MESSAGES from "../../common/contstants/messages.js";
 
 export const createCategory = handleAsync(async (req, res, next) => {
