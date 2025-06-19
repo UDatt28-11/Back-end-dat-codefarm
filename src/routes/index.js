@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import productRotes from "../modules/product/product.routes.js";
 import categoryRoutes from "../modules/category/category.routes.js";
-import subCategoryRoutes from "./../modules/subcategory/subcategory.routes";
+import subCategoryRoutes from "../modules/subcategory/subcategory.routes.js";
 const router = Router();
 
 router.use("/products", productRotes);
