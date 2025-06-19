@@ -1,72 +1,93 @@
-import Category from "./Category.model.js";
+import Category from "./category.model.js";
 import createError from "../../common/utils/error.js";
 import handleAsync from "../../common/utils/handleAsync.js";
 import createResponse from "../../common/utils/response.js";
-import findByIdCategory from "./category.service.js";
+import MESSAGES from "../../common/contstants/messages.js";
 
 export const createCategory = handleAsync(async (req, res, next) => {
   const existing = await Category.findOne({ title: req.body.title });
-  if (existing) return next(createError(400, "This Category already exists!"));
+  if (existing)
+    return next(createError(400, MESSAGES.CATEGORY.CREATE_ERROR_EXISTS));
   const data = await Category.create(req.body);
   return res.json(
-    createResponse(true, 201, "Category created successfully", data)
+    createResponse(true, 201, MESSAGES.CATEGORY.CREATE_SUCCESS, data)
   );
 });
+
 export const getListCategory = handleAsync(async (req, res, next) => {
   const data = await Category.find();
+  if (!data || data.length === 0) {
+    return next(createError(404, MESSAGES.CATEGORY.NOT_FOUND));
+  }
   return res.json(
-    createResponse(true, 200, "Category list category successfully", data)
+    createResponse(true, 200, MESSAGES.CATEGORY.GET_SUCCESS, data)
   );
 });
 
 export const getDetailCategory = handleAsync(async (req, res, next) => {
-  const data = await findByIdCategory(req.params.id);
+  const data = await Category.findById(req.params.id);
   if (!data) {
-    next(createError(false, 404, "Category not found"));
+    next(createError(404, MESSAGES.CATEGORY.NOT_FOUND));
   }
   return res.json(
-    createResponse(true, 200, "Category detail successfully", data)
+    createResponse(true, 200, MESSAGES.CATEGORY.GET_SUCCESS, data)
   );
 });
 
 export const updateCategory = handleAsync(async (req, res, next) => {
-  const data = await findByIdCategory(req.id);
-  if (!data) {
-    next(createError(false, 404, "Category not found"));
-  }
-  return res.json(
-    createResponse(true, 200, "Category updated successfully", data)
-  );
+  const data = await Category.findByIdAndUpdate(req.params.id, req.body);
+  if (data)
+    return res.json(
+      createResponse(true, 200, MESSAGES.CATEGORY.UPDATE_SUCCESS, data)
+    );
+  next(createError(false, 404, "Category update failed!"));
 });
+
 export const deleteCategory = handleAsync(async (req, res, next) => {
-  const data = await findByIdCategory(req.id);
-  if (!data) {
-    next(createError(false, 404, "Category not found"));
-  }
-  return res.json(
-    createResponse(true, 200, "Category deleted successfully", data)
-  );
+  const data = await Category.findByIdAndDelete(id);
+  if (data)
+    return res.json(
+      createResponse(true, 200, MESSAGES.CATEGORY.DELETE_SUCCESS, data)
+    );
+  next(createError(false, 404, MESSAGES.CATEGORY.NOT_FOUND));
 });
+
 export const softDeleteCategory = handleAsync(async (req, res, next) => {
   const { id } = req.params;
   if (id) {
-    await Category.findByIdAndUpdate(id, {
-      deletedAt: new Date(),
-    });
-    return res.json(createResponse(true, 200, "Category soft hidden found"));
+    const data = await Category.findOneAndUpdate(
+      { _id: id, deletedAt: null },
+      {
+        deletedAt: new Date(),
+      },
+      {
+        new: true,
+      }
+    );
+    return res.json(
+      createResponse(true, 200, MESSAGES.CATEGORY.SOFT_DELETE_SUCCESS, data)
+    );
   }
-  next(createError(false, 404, "Hidden Category soft delete found"));
+  next(createError(false, 404, MESSAGES.CATEGORY.SOFT_DELETE_FAILED));
 });
 
 export const restoreCategory = handleAsync(async (req, res, next) => {
   const { id } = req.params;
+  console.log(id);
   if (id) {
-    const data = await Category.findByIdAndUpdate(id, {
-      deletedAt: null,
-    });
+    const data = await Category.findOneAndUpdate(
+      { _id: id },
+      {
+        deletedAt: null,
+      },
+      { new: true }
+    );
+
+    console.log(data);
+    // ne = not equal
     return res.json(
-      createResponse(true, 200, "Category restored successfully", data)
+      createResponse(true, 200, MESSAGES.CATEGORY.RESTORE_SUCCESS, data)
     );
   }
-  next(createError(false, 404, "Category restore found"));
+  next(createError(false, 404, MESSAGES.CATEGORY.RESTORE_FAILED));
 });
