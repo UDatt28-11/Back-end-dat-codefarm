@@ -1,7 +1,8 @@
-import Category from "../models/Category";
-import createError from "../utils/error.js";
-import handleAsync from "../utils/handleAsync.js";
-import createResponse from "../utils/response.js";
+import Category from "./Category.model.js";
+import createError from "../../common/utils/error.js";
+import handleAsync from "../../common/utils/handleAsync.js";
+import createResponse from "../../common/utils/response.js";
+import findByIdCategory from "./category.service.js";
 
 export const createCategory = handleAsync(async (req, res, next) => {
   const existing = await Category.findOne({ title: req.body.title });
@@ -19,35 +20,32 @@ export const getListCategory = handleAsync(async (req, res, next) => {
 });
 
 export const getDetailCategory = handleAsync(async (req, res, next) => {
-  const { id } = req.params;
-  if (id) {
-    const data = await Category.findById(id);
-    return res.json(
-      createResponse(true, 200, "Category detail successfully", data)
-    );
+  const data = await findByIdCategory(req.params.id);
+  if (!data) {
+    next(createError(false, 404, "Category not found"));
   }
-  next(createError(false, 404, "Category not found"));
+  return res.json(
+    createResponse(true, 200, "Category detail successfully", data)
+  );
 });
 
 export const updateCategory = handleAsync(async (req, res, next) => {
-  const { id } = req.params;
-  if (id) {
-    const data = await Category.findByIdAndUpdate(id, req.body);
-    return res.json(
-      createResponse(true, 200, "Category updated successfully", data)
-    );
+  const data = await findByIdCategory(req.id);
+  if (!data) {
+    next(createError(false, 404, "Category not found"));
   }
-  next(createError(false, 404, "Category update found"));
+  return res.json(
+    createResponse(true, 200, "Category updated successfully", data)
+  );
 });
 export const deleteCategory = handleAsync(async (req, res, next) => {
-  const { id } = req.params;
-  if (id) {
-    const data = await Category.findByIdAndDelete(id);
-    return res.json(
-      createResponse(true, 200, "Category deleted successfully", data)
-    );
+  const data = await findByIdCategory(req.id);
+  if (!data) {
+    next(createError(false, 404, "Category not found"));
   }
-  next(createError(false, 404, "Category delete found"));
+  return res.json(
+    createResponse(true, 200, "Category deleted successfully", data)
+  );
 });
 export const softDeleteCategory = handleAsync(async (req, res, next) => {
   const { id } = req.params;

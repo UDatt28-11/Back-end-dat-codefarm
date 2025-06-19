@@ -6,15 +6,20 @@ import {
   getListCategory,
   softDeleteCategory,
   updateCategory,
-} from "../controllers/categoryControllers.js";
+} from "../category/category.controllers.js";
+import valiBodyRequest from "../../common/middlewares/validBodyRequest.js";
+import categorySchema from "./category.schema.js";
 
 const categoryRoutes = Router();
 
 categoryRoutes.get("/", getListCategory);
+
 categoryRoutes.get("/:id", getDetailCategory);
-categoryRoutes.post("/", createCategory);
-categoryRoutes.patch("/:id", updateCategory);
 categoryRoutes.delete("/:id", deleteCategory);
 categoryRoutes.delete("/soft-delete/:id", softDeleteCategory);
+
+categoryRoutes.use(valiBodyRequest(categorySchema));
+categoryRoutes.post("/", createCategory);
+categoryRoutes.patch("/:id", updateCategory);
 
 export default categoryRoutes;
