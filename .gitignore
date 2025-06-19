@@ -41,3 +41,6 @@ temp/
 *.rej
 *.sublime-workspace
 *.sublime-project
+
+# Nodepad
+*.md
