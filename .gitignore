@@ -43,5 +43,5 @@ temp/
 *.sublime-project
 
 # Nodepad
-*.md
+
 docs/
