@@ -52,3 +52,5 @@ res.redirect(url) Chuyển hướng người dùng
   // utils : tiện ích
 
 - Middleware là một lớp phần mềm trung gian nằm giữa hệ điều hành hoặc phần mềm cơ sở và các ứng dụng chạy trên đó. Nó đóng vai trò cầu nối, giúp các thành phần khác nhau trong hệ thống có thể giao tiếp, chia sẻ dữ liệu, hoặc thực hiện các chức năng cụ thể một cách hiệu quả.
+- deploy là quá trình đưa mã nguồn lên internet cho người dùng truy cập
+-

@@ -30,13 +30,16 @@ export const authRegister = handleAsync(async (req, res, next) => {
   if (!newUser) {
     return next(createError(500, MESSAGES.AUTH.REGISTER_FAILED));
   }
+
   // Verify  email
   const verifyEmailToken = jwt.sign(
     { id: newUser._id },
     JWT_SECRET_KEY_FOR_EMAIL,
     { expiresIn: JWT_EXPIRES_IN_FOR_EMAIL }
   );
+
   const verifyEmailLink = `http://localhost:5173/auth/verify-email/${verifyEmailToken}`;
+
   // Respone
   newUser.password = undefined; // Remove password from response
   res
@@ -54,10 +57,13 @@ export const authLogin = handleAsync(async (req, res, next) => {
   if (!isMatch) {
     return next(createError(400, MESSAGES.AUTH.LOGIN_FAILED));
   }
+
   //Generate token
+
   const accessToken = jwt.sign({ id: existingUser._id }, JWT_SECRET_KEY, {
     expiresIn: JWT_EXPIRES_IN,
   });
+
   if (accessToken) {
     existingUser.password = undefined;
     return res.status(200).json(
@@ -69,3 +75,11 @@ export const authLogin = handleAsync(async (req, res, next) => {
   }
   return next(createError(500, MESSAGES.AUTH.LOGIN_FAILED));
 });
+
+export const authLogout = handleAsync(async (req, res, next) => {});
+
+export const authRefreshToken = handleAsync(async (req, res, next) => {});
+
+export const authForgotPassword = handleAsync(async (req, res, next) => {});
+
+export const authResetPassword = handleAsync(async (req, res, next) => {});
