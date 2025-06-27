@@ -8,6 +8,7 @@ const MESSAGES = {
     FORBIDDEN: "Truy cập bị cấm",
   },
   AUTH: {
+    USER_NOT_EXITS: "Người dùng không tồn tại",
     LOGIN_SUCCESS: "Đăng nhập thành công",
     LOGOUT_SUCCESS: "Đăng xuất thành công",
     REGISTER_SUCCESS: "Đăng ký thành công",

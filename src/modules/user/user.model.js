@@ -1,0 +1,66 @@
+import mongoose from "mongoose";
+const userSchema = new mongoose.Schema(
+  {
+    fullName: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      default: true,
+      unique: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      default: true,
+    },
+    phoneNumber: {
+      type: String,
+    },
+    role: {
+      type: String,
+      default: "",
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    role: {
+      type: String,
+      default: "guset",
+    },
+    address: {
+      type: String,
+      default: "",
+    },
+    bios: {
+      type: String,
+      default: "",
+    },
+    avatar: {
+      type: String,
+      default:
+        "https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg",
+    },
+    socal: {
+      facebook: {
+        type: String,
+        default: "",
+      },
+      instagram: {
+        type: String,
+        default: "",
+      },
+      twitter: {
+        type: String,
+        default: "",
+      },
+    },
+  },
+  { versionKey: false, timestamps: true }
+);
+
+const User = mongoose.model("User", userSchema);
+
+export default User;
