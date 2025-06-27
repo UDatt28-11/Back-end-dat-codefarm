@@ -1,14 +1,16 @@
-import MESSAGES from "../../common/contstants/messages";
-import createError from "../../common/utils/error";
-import handleAsync from "../../common/utils/handleAsync";
+import MESSAGES from "../../common/contstants/messages.js";
+import createError from "../../common/utils/error.js";
+import handleAsync from "../../common/utils/handleAsync.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import createResponse from "../../common/utils/response";
+import createResponse from "../../common/utils/response.js";
 import {
   JWT_EXPIRES_IN,
+  JWT_EXPIRES_IN_FOR_EMAIL,
   JWT_SECRET_KEY,
+  JWT_SECRET_KEY_FOR_EMAIL,
 } from "../../common/configs/environments";
-import User from "../user/use.model";
+import User from "../user/user.model";
 
 export const authRegister = handleAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -34,7 +36,7 @@ export const authRegister = handleAsync(async (req, res, next) => {
     JWT_SECRET_KEY_FOR_EMAIL,
     { expiresIn: JWT_EXPIRES_IN_FOR_EMAIL }
   );
-  const verifyEmailLink = `http://locahost:5173/auth/verify-email/${verifyEmailToken}`;
+  const verifyEmailLink = `http://localhost:5173/auth/verify-email/${verifyEmailToken}`;
   // Respone
   newUser.password = undefined; // Remove password from response
   res
