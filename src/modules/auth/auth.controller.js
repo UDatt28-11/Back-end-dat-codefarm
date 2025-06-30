@@ -39,7 +39,7 @@ export const authRegister = handleAsync(async (req, res, next) => {
     { expiresIn: JWT_EXPIRES_IN_FOR_EMAIL }
   );
 
-  const verifyEmailLink = `http://localhost:5173/auth/verify-email/${verifyEmailToken}`;
+  const verifyEmailLink = `http://localhost:8888/api/auth/verify-email/${verifyEmailToken}`;
 
   sendEmail(
     newUser.email,

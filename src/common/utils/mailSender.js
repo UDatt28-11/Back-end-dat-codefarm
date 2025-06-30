@@ -1,7 +1,8 @@
+import nodemailer from "nodemailer";
 import { EMAIL_PASSWORD, EMAIL_USER } from "../configs/environments.js";
 import createError from "./error.js";
-import nodemailer from "nodemailer";
-const sendEmail = async (email, subject, text) => {
+
+const sendEmail = async (to, subject, html) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -11,16 +12,17 @@ const sendEmail = async (email, subject, text) => {
   });
 
   const mailOptions = {
-    from: "June",
-    to: email,
-    subject: subject,
-    text: text,
+    from: `"June 👩‍💻" <${EMAIL_USER}>`,
+    to,
+    subject,
+    html,
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions); // ✅ Gán info tại đây
+    console.log("✅ Email đã được gửi:", info.response); // ✅ Giờ info mới tồn tại
   } catch (error) {
-    // Ném lỗi cho middleware xử lý
+    console.error("❌ Gửi email lỗi:", error);
     throw createError(500, `Gửi email thất bại: ${error.message}`);
   }
 };
