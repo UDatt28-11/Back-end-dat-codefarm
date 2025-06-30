@@ -6,11 +6,12 @@ import jwt from "jsonwebtoken";
 import createResponse from "../../common/utils/response.js";
 import {
   JWT_EXPIRES_IN,
-  JWT_EXPIRES_IN_FOR_EMAIL,
   JWT_SECRET_KEY,
+  JWT_EXPIRES_IN_FOR_EMAIL,
   JWT_SECRET_KEY_FOR_EMAIL,
 } from "../../common/configs/environments";
 import User from "../user/user.model";
+import sendEmail from "../../common/utils/mailSender.js";
 
 export const authRegister = handleAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -39,6 +40,28 @@ export const authRegister = handleAsync(async (req, res, next) => {
   );
 
   const verifyEmailLink = `http://localhost:5173/auth/verify-email/${verifyEmailToken}`;
+
+  sendEmail(
+    newUser.email,
+    "Verify your email",
+    `
+      <div style="font-family: Arial, sans-serif; color: #333; padding: 20px;">
+        <h2 style="color:rgb(0, 0, 0);">Xin chào ${
+          newUser.fullName || "User"
+        },</h2>
+        <p>Vui lòng click vào nút dưới đây để xác thực email của bạn:</p>
+  
+        <a href="${verifyEmailLink}"
+           style="display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; 
+                  text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; display: inline-block;">
+           Xác thực email
+        </a>
+  
+        <p>Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.</p>
+        <p style="margin-top: 30px;">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!<br>– Đội ngũ hỗ trợ</p>
+      </div>
+    `
+  );
 
   // Respone
   newUser.password = undefined; // Remove password from response
