@@ -13,4 +13,14 @@ dotenv.config({
   overrideProcessEnv: true, // Ghi đè các biến môi trường đã tồn tại trong process.env
 });
 // Connect to MongoDB using Mongoose
-export const { DB_URI, HOST, PORT } = process.env;
+export const {
+  DB_URI,
+  HOST,
+  PORT,
+  JWT_SECRET_KEY,
+  JWT_EXPIRES_IN,
+  EMAIL_USER,
+  EMAIL_PASSWORD,
+  JWT_SECRET_KEY_FOR_EMAIL,
+  JWT_EXPIRES_IN_FOR_EMAIL,
+} = process.env;
