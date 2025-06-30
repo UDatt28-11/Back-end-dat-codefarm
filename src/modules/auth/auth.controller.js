@@ -9,8 +9,8 @@ import {
   JWT_SECRET_KEY,
   JWT_EXPIRES_IN_FOR_EMAIL,
   JWT_SECRET_KEY_FOR_EMAIL,
-} from "../../common/configs/environments";
-import User from "../user/user.model";
+} from "../../common/configs/environments.js";
+import User from "../user/user.model.js";
 import sendEmail from "../../common/utils/mailSender.js";
 
 export const authRegister = handleAsync(async (req, res, next) => {
