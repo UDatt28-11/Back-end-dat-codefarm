@@ -12,10 +12,10 @@ const sendEmail = async (to, subject, html) => {
   });
 
   const mailOptions = {
-    from: `"June 👩‍💻" <${EMAIL_USER}>`,
-    to,
-    subject,
-    html,
+    from: "June",
+    to: email,
+    subject: subject,
+    text: text,
   };
 
   try {
