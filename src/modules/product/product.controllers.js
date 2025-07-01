@@ -26,36 +26,36 @@ export const getDetailProduct = handleAsync(async (req, res, next) => {
   );
 });
 
-// export const createProduct = handleAsync(async (req, res, next) => {
-//   const { brand, subCategory } = req.body;
-//   // * Kiểm tra xem brand, category có còn tồn tại không?
+export const createProduct = handleAsync(async (req, res, next) => {
+  const { brand, subCategory } = req.body;
+  // * Kiểm tra xem brand, category có còn tồn tại không?
 
-//   const product = await Product.create(req.body);
+  const product = await Product.create(req.body);
 
-//   if (!product) {
-//     return next(createError(500, MESSAGES.PRODUCT.CREATE_FAILED));
-//   }
-//   return res.json(
-//     createResponse(true, 201, MESSAGES.PRODUCT.CREATE_SUCCESS, product)
-//   );
-// });
+  if (!product) {
+    return next(createError(500, MESSAGES.PRODUCT.CREATE_FAILED));
+  }
+  return res.json(
+    createResponse(true, 201, MESSAGES.PRODUCT.CREATE_SUCCESS, product)
+  );
+});
 
-// export const updateVariants = handleAsync(async (req, res, next) => {
-//   const { productId } = req.body;
-//   // * Kiểm tra xem productId có tồn tại không?
+export const updateVariants = handleAsync(async (req, res, next) => {
+  const { productId } = req.body;
+  // * Kiểm tra xem productId có tồn tại không?
 
-//   const product = await Product.findByIdAndUpdate(
-//     productId,
-//     {
-//       $push: { variants: req.body.variants },
-//     },
-//     { new: true }
-//   );
+  const product = await Product.findByIdAndUpdate(
+    productId,
+    {
+      $push: { variants: req.body.variants },
+    },
+    { new: true }
+  );
 
-//   if (!product) {
-//     return next(createError(500, MESSAGES.PRODUCT.CREATE_FAILED));
-//   }
-//   return res.json(
-//     createResponse(true, 201, MESSAGES.PRODUCT.CREATE_SUCCESS, product)
-//   );
-// });
+  if (!product) {
+    return next(createError(500, MESSAGES.PRODUCT.CREATE_FAILED));
+  }
+  return res.json(
+    createResponse(true, 201, MESSAGES.PRODUCT.CREATE_SUCCESS, product)
+  );
+});
