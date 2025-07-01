@@ -9,8 +9,8 @@ import {
   JWT_SECRET_KEY,
   JWT_EXPIRES_IN_FOR_EMAIL,
   JWT_SECRET_KEY_FOR_EMAIL,
-} from "../../common/configs/environments";
-import User from "../user/user.model";
+} from "../../common/configs/environments.js";
+import User from "../user/user.model.js";
 import sendEmail from "../../common/utils/mailSender.js";
 
 export const authRegister = handleAsync(async (req, res, next) => {
@@ -39,7 +39,7 @@ export const authRegister = handleAsync(async (req, res, next) => {
     { expiresIn: JWT_EXPIRES_IN_FOR_EMAIL }
   );
 
-  const verifyEmailLink = `http://localhost:5173/auth/verify-email/${verifyEmailToken}`;
+  const verifyEmailLink = `http://localhost:8888/api/auth/verify-email/${verifyEmailToken}`;
 
   sendEmail(
     newUser.email,
@@ -70,6 +70,33 @@ export const authRegister = handleAsync(async (req, res, next) => {
     .json(createResponse(true, 201, MESSAGES.AUTH.REGISTER_SUCCESS, newUser));
 });
 
+export const verifyEmail = handleAsync(async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const decoded = jwt.verify(token, JWT_SECRET_KEY_FOR_EMAIL);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return next(createError(404, MESSAGES.AUTH.USER_NOT_EXITS));
+    }
+
+    if (user.isVerified) {
+      return res
+        .status(200)
+        .json(createResponse(true, 200, MESSAGES.AUTH.EMAIL_VERIFIED));
+    }
+
+    user.isVerified = true;
+    await user.save(); // ✅ Cực kỳ quan trọng!
+
+    return res
+      .status(200)
+      .json(createResponse(true, 200, MESSAGES.AUTH.EMAIL_VERIFIED, user));
+  } catch (err) {
+    return next(createError(400, MESSAGES.AUTH.INVALID_TOKEN));
+  }
+});
+
 export const authLogin = handleAsync(async (req, res, next) => {
   const { email, password } = req.body;
   const existingUser = await User.findOne({ email });
@@ -80,6 +107,11 @@ export const authLogin = handleAsync(async (req, res, next) => {
   if (!isMatch) {
     return next(createError(400, MESSAGES.AUTH.LOGIN_FAILED));
   }
+  // ✅ Kiểm tra xác thực email
+  if (!existingUser.isVerified) {
+    return next(createError(403, MESSAGES.AUTH.EMAIL_NOT_VERIFIED));
+  }
+  // Xác thực email thành công thì đăng nhập
 
   //Generate token
 
