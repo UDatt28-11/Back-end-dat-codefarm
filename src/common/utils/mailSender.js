@@ -13,9 +13,9 @@ const sendEmail = async (to, subject, html) => {
 
   const mailOptions = {
     from: "June",
-    to: email,
-    subject: subject,
-    text: text,
+    to,
+    subject,
+    html,
   };
 
   try {

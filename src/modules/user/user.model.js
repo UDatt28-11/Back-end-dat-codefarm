@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema(
       default:
         "https://static.vecteezy.com/system/resources/previews/009/292/244/large_2x/default-avatar-icon-of-social-media-user-vector.jpg",
     },
+    isVerified: { type: Boolean, default: false },
     socal: {
       facebook: {
         type: String,
