@@ -28,9 +28,6 @@ export const authRegister = handleAsync(async (req, res, next) => {
     password: hashedPassword,
     role: "guest",
   });
-  if (!newUser) {
-    return next(createError(500, MESSAGES.AUTH.REGISTER_FAILED));
-  }
 
   // Verify  email
   const verifyEmailToken = jwt.sign(
@@ -103,17 +100,15 @@ export const authLogin = handleAsync(async (req, res, next) => {
   if (!existingUser) {
     return next(createError(400, MESSAGES.AUTH.USER_NOT_EXITS));
   }
+
   const isMatch = bcrypt.compareSync(password, existingUser.password);
   if (!isMatch) {
     return next(createError(400, MESSAGES.AUTH.LOGIN_FAILED));
   }
-  // ✅ Kiểm tra xác thực email
+
   if (!existingUser.isVerified) {
     return next(createError(403, MESSAGES.AUTH.EMAIL_NOT_VERIFIED));
   }
-  // Xác thực email thành công thì đăng nhập
-
-  //Generate token
 
   const accessToken = jwt.sign({ id: existingUser._id }, JWT_SECRET_KEY, {
     expiresIn: JWT_EXPIRES_IN,
@@ -128,6 +123,7 @@ export const authLogin = handleAsync(async (req, res, next) => {
       })
     );
   }
+
   return next(createError(500, MESSAGES.AUTH.LOGIN_FAILED));
 });
 

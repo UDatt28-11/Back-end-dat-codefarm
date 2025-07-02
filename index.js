@@ -1,5 +1,5 @@
 import express from "express";
-
+import dotenv from "dotenv";
 import router from "./src/routes/index.js";
 import connectDB from "./src/common/configs/connectDB.js";
 
@@ -9,7 +9,7 @@ import setupSwagger from "./src/common/configs/swagger-config.js";
 import cors from "cors";
 
 connectDB();
-
+dotenv.config();
 const app = express();
 
 app.use(express.json());

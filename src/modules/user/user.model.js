@@ -7,13 +7,13 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      default: true,
+      required: true, // ✅ Sửa lại dòng này
       unique: true,
       lowercase: true,
     },
     password: {
       type: String,
-      default: true,
+      required: true, // ✅ Sửa lại dòng này
     },
     phoneNumber: {
       type: String,
