@@ -28,7 +28,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "guset",
+      enum: ["customer", "admin", "superadmin"],
+      default: "customer",
     },
     address: {
       type: String,

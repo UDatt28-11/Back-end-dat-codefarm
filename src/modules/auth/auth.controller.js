@@ -26,7 +26,7 @@ export const authRegister = handleAsync(async (req, res, next) => {
   const newUser = await User.create({
     ...req.body,
     password: hashedPassword,
-    role: "guest",
+    role: "customer",
   });
 
   // Verify  email
@@ -110,15 +110,25 @@ export const authLogin = handleAsync(async (req, res, next) => {
     return next(createError(403, MESSAGES.AUTH.EMAIL_NOT_VERIFIED));
   }
 
-  const accessToken = jwt.sign({ id: existingUser._id }, JWT_SECRET_KEY, {
-    expiresIn: JWT_EXPIRES_IN,
-  });
+  const accessToken = jwt.sign(
+    { id: existingUser._id, role: existingUser.role },
+    JWT_SECRET_KEY,
+    {
+      expiresIn: JWT_EXPIRES_IN,
+    }
+  );
 
   if (accessToken) {
     existingUser.password = undefined;
     return res.status(200).json(
       createResponse(true, 200, MESSAGES.AUTH.LOGIN_SUCCESS, {
-        user: existingUser,
+        user: {
+          id: existingUser._id,
+          fullName: existingUser.fullName,
+          email: existingUser.email,
+          role: existingUser.role,
+          avatar: existingUser.avatar,
+        },
         accessToken,
       })
     );
