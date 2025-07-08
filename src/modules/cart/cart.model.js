@@ -7,28 +7,32 @@ const cartSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    products: [
+    items: [
       {
-        productId: {
+        product: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
           required: true,
         },
-        variantId: {
+        variant: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "ProductVariant",
+          required: true,
         },
-        quantity: { type: Number, required: true, default: 1 },
+        quantity: {
+          type: Number,
+          default: 1,
+          min: 1,
+        },
       },
     ],
-    totalPrice: { type: Number, required: true, default: 0 },
-    totalQuantity: { type: Number, required: true, default: 0 },
-    createdAt: { type: Date, default: Date.now },
-    deletedAt: { type: Date, default: null },
   },
   {
-    timeseries: true,
+    timeStamps: true,
+    versionKey: false,
   }
 );
-const Cart = mongoose.model("Cart ", cartSchema);
+
+const Cart = mongoose.model("Cart", cartSchema);
+
 export default Cart;
