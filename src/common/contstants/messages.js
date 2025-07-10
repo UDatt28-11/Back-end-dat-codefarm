@@ -123,9 +123,14 @@ const MESSAGES = {
     CLEAR_CART_SUCCESS: "Xóa toàn bộ giỏ hàng thành công",
 
     ADD_ITEM_ERROR: "Lỗi khi thêm sản phẩm vào giỏ hàng",
+    NO_ITEM_ERROR: "Không tìm thấy sản phẩm ở trong giỏ hàng",
     UPDATE_ITEM_ERROR: "Lỗi khi cập nhật sản phẩm trong giỏ hàng",
     REMOVE_ITEM_ERROR: "Lỗi khi xóa sản phẩm khỏi giỏ hàng",
     CLEAR_CART_ERROR: "Lỗi khi xóa toàn bộ giỏ hàng",
+    NO_VARIANT: "Không tìm thấy biến thể sản phẩm",
+    ERROR_STOCK : "Số lượng vượt quá tồn kho hiện có",
+    NO_VARIANT_SELECTED:
+      "Vui lòng chọn biến thể sản phẩm trước khi thêm vào giỏ hàng",
   },
 
   ORDER: {

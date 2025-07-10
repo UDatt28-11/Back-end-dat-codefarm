@@ -28,7 +28,7 @@ const cartSchema = new mongoose.Schema(
     ],
   },
   {
-    timeStamps: true,
+    timestamps: true,
     versionKey: false,
   }
 );

@@ -5,7 +5,7 @@ export const cartShema = z.object({
   products: z.array(
     z.object({
       productId: z.string().min(1),
-      quantity: z.number().min(1),
+      quantity: z.number().min(1).max(1000),
     })
   ),
   totalPrice: z.number().min(0),
