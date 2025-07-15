@@ -5,20 +5,60 @@ import MESSAGES from "./../../common/contstants/messages.js";
 import Product from "./product.model.js";
 
 export const getListProduct = handleAsync(async (req, res, next) => {
-  const { q } = req.query;
-  const filter = q
-    ? {
-        title: { $regex: q, $options: "i" }, // tìm không phân biệt hoa thường
-      }
-    : {};
-  // const skip = (page - 1) * limit;
+  const {
+    q,
+    page = 1,
+    limit = 9,
+    minPrice = 0,
+    maxPrice = 1000000,
+    sortBy = "title",
+    order = "asc",
+    filter,
+  } = req.query;
 
-  const data = await Product.find(filter).populate("subCategory");
+  const skip = (page - 1) * limit;
+
+  const query = {};
+
+  // Tìm kiếm theo tên sản phẩm
+  if (q) {
+    query.title = { $regex: q, $options: "i" };
+  }
+
+  // Lọc theo giá
+  // query.price = { $gte: Number(minPrice), $lte: Number(maxPrice) };
+
+  // Lọc theo trạng thái sale hoặc new
+  // if (filter === "sale") {
+  //   query.sale = true;
+  // } else if (filter === "new") {
+  //   query.sale = false;
+  // }
+
+  // Sắp xếp
+  const sort = {};
+  sort[sortBy] = order === "desc" ? -1 : 1;
+
+  const data = await Product.find(query)
+    .populate("subCategory")
+    .sort(sort)
+    .skip(Number(skip))
+    .limit(Number(limit));
+
   if (!data || data.length === 0) {
     return next(createError(404, MESSAGES.PRODUCT.NOT_FOUND));
   }
+
+  // Optionally: Đếm tổng số sản phẩm (phục vụ phân trang phía client)
+  const total = await Product.countDocuments(query);
+
   return res.json(
-    createResponse(true, 200, MESSAGES.PRODUCT.GET_SUCCESS, data)
+    createResponse(true, 200, MESSAGES.PRODUCT.GET_SUCCESS, {
+      products: data,
+      total,
+      page: Number(page),
+      limit: Number(limit),
+    })
   );
 });
 
