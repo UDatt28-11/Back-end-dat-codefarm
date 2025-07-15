@@ -10,7 +10,9 @@ export const getCart = handleAsync(async (req, res, next) => {
   console.log(req.user);
   const cart = await Cart.findOne({ userId: req.user._id });
   console.log(cart);
-  return res.json(createResponse(true, 200, MESSAGES.CART.GET_SUCCESS, cart));
+  return res
+    .status(200)
+    .json(createResponse(true, 200, MESSAGES.CART.GET_SUCCESS, cart));
 });
 export const addCart = handleAsync(async (req, res, next) => {
   // Lấy userId từ request
