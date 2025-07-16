@@ -9,6 +9,10 @@ const productSchema = new mongoose.Schema(
     specifications: { type: Object, default: {} },
     priceDefault: { type: Number, required: true },
     slug: { type: String, required: true, unique: true },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",

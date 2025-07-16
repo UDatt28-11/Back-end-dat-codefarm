@@ -31,6 +31,7 @@ const MESSAGES = {
   USER: {
     GET_SUCCESS: "Lấy danh sách người dùng thành công",
     GET_BY_ID_SUCCESS: "Lấy thông tin người dùng thành công",
+    GET_BY_ID_FAIL: "Lấy thông tin người dùng không thành công",
     CREATE_SUCCESS: "Tạo người dùng thành công",
     UPDATE_SUCCESS: "Cập nhật người dùng thành công",
     DELETE_SUCCESS: "Xóa người dùng thành công",

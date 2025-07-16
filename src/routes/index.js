@@ -9,6 +9,7 @@ import orderRouter from "../modules/order/order.routes.js";
 import { verifyUser } from "../common/middlewares/verifyUser.js";
 import { authMiddleware } from "../common/middlewares/authMiddleware.js";
 import commentRouter from "./../modules/comment/comment.routes.js";
+import userRoutes from "../modules/user/user.routes.js";
 const router = Router();
 
 router.use("/auth", authRoutes);
@@ -20,5 +21,6 @@ router.use("/sub-categories", subCategoryRoutes);
 router.use("/cart", authMiddleware, verifyUser, cartRouter);
 router.use("/order", orderRouter);
 router.use("/comment", commentRouter);
+router.use("/user", userRoutes);
 
 export default router;
