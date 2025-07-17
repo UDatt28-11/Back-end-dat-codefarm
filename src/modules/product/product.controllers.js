@@ -3,6 +3,7 @@ import handleAsync from "../../common/utils/handleAsync.js";
 import createResponse from "./../../common/utils/response.js";
 import MESSAGES from "./../../common/contstants/messages.js";
 import Product from "./product.model.js";
+import { uploadSingleFile } from "../../common/utils/cloudinary.js";
 
 export const getListProduct = handleAsync(async (req, res, next) => {
   const {
@@ -75,14 +76,24 @@ export const getDetailProduct = handleAsync(async (req, res, next) => {
 });
 
 export const createProduct = handleAsync(async (req, res, next) => {
-  const { brand, subCategory } = req.body;
-  // * Kiểm tra xem brand, category có còn tồn tại không?
+  // const { brand, subCategory } = req.body;
+  const files = req.files;
+  const thumbnail = files?.thumbnail[0];
+  const payload = { ...req.body };
+  console.log(payload);
 
-  const product = await Product.create(req.body);
+  if (thumbnail) {
+    const thumnailData = await uploadSingleFile(thumbnail);
+    payload.thumbnail = thumnailData.downloadUrl;
+  }
+  console.log(payload);
+
+  const product = await Product.create(payload);
 
   if (!product) {
     return next(createError(500, MESSAGES.PRODUCT.CREATE_ERROR));
   }
+
   return res.json(
     createResponse(true, 201, MESSAGES.PRODUCT.CREATE_SUCCESS, product)
   );
@@ -90,11 +101,18 @@ export const createProduct = handleAsync(async (req, res, next) => {
 
 export const updateProduct = handleAsync(async (req, res, next) => {
   const { id } = req.params;
+
+  // Nếu có file ảnh mới, cập nhật ảnh
+  if (req.file && req.file.path) {
+    req.body.image = req.file.path;
+  }
+
   const updated = await Product.findByIdAndUpdate(id, req.body, { new: true });
-  //Nếu không tìm thấy sản phẩm
+
   if (!updated) {
     return next(createError(404, MESSAGES.PRODUCT.UPDATE_ERROR));
   }
+
   return res.json(
     createResponse(true, 200, MESSAGES.PRODUCT.UPDATE_SUCCESS, updated)
   );
@@ -160,5 +178,18 @@ export const updateVariants = handleAsync(async (req, res, next) => {
   }
   return res.json(
     createResponse(true, 201, MESSAGES.PRODUCT.CREATE_SUCCESS, product)
+  );
+});
+export const uploadProductImage = handleAsync(async (req, res, next) => {
+  if (!req.file) {
+    return next(createError(400, "Không có ảnh được upload"));
+  }
+
+  const imageUrl = req.file.path;
+
+  return res.json(
+    createResponse(true, 201, MESSAGES.PRODUCT.UPLOAD_IMAGE_SUCCESS, {
+      url: imageUrl,
+    })
   );
 });
