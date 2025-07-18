@@ -1,3 +1,4 @@
+import createResponse from "../../common/utils/response.js";
 import Size from "./size.model.js";
 
 export const createSize = async (req, res) => {
@@ -5,22 +6,19 @@ export const createSize = async (req, res) => {
   const exists = await Size.findOne({ name });
   if (exists) return res.status(400).json({ message: "Size đã tồn tại" });
   const size = await Size.create({ name });
-  res.json(size);
+  return res
+    .status(201)
+    .json(createResponse(true, 201, "Thêm size thành công", size));
 };
 
 export const getAllSizes = async (req, res) => {
   const sizes = await Size.find();
-  res.json(sizes);
+  return res.status(200).json(createResponse(true, 200, "OK", sizes));
 };
 
 export const updateSize = async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
   const updated = await Size.findByIdAndUpdate(id, { name }, { new: true });
-  res.json(updated);
-};
-
-export const deleteSize = async (req, res) => {
-  await Size.findByIdAndDelete(req.params.id);
-  res.json({ message: "Đã xóa size" });
+  return res.status(200).json(createResponse(true, 200, "OK", updated));
 };

@@ -13,6 +13,7 @@ import userRoutes from "../modules/user/user.routes.js";
 import sizeRoutes from "../modules/size/size.routes.js";
 import colorRoutes from "../modules/color/color.routes.js";
 import brandRouter from "../modules/brand/brand.routes.js";
+import testRouter from "../modules/product-variant/product.routes.js";
 const router = Router();
 
 router.use("/auth", authRoutes);
@@ -28,5 +29,7 @@ router.use("/cart", authMiddleware, verifyUser, cartRouter);
 router.use("/order", orderRouter);
 router.use("/comment", commentRouter);
 router.use("/user", userRoutes);
+
+router.use("/test", testRouter);
 
 export default router;

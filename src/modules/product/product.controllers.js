@@ -4,6 +4,7 @@ import createResponse from "./../../common/utils/response.js";
 import MESSAGES from "./../../common/contstants/messages.js";
 import Product from "./product.model.js";
 import { uploadSingleFile } from "../../common/utils/cloudinary.js";
+import ProductVariant from "../product-variant/product-variant.model.js";
 
 export const getListProduct = handleAsync(async (req, res, next) => {
   const {
@@ -66,10 +67,20 @@ export const getListProduct = handleAsync(async (req, res, next) => {
 export const getDetailProduct = handleAsync(async (req, res, next) => {
   const data = await Product.findById(req.params.id)
     .populate("category")
-    .populate("subCategory");
+    .populate("subCategory")
+    .populate("brand")
+    .populate({
+      path: "variants",
+      populate: [
+        { path: "colorId", model: "Color" },
+        { path: "sizeId", model: "Size" },
+      ],
+    });
+
   if (!data) {
     return next(createError(404, MESSAGES.PRODUCT.NOT_FOUND));
   }
+
   return res.json(
     createResponse(true, 200, MESSAGES.PRODUCT.GET_SUCCESS, data)
   );
@@ -80,20 +91,30 @@ export const createProduct = handleAsync(async (req, res, next) => {
   const files = req.files;
   const thumbnail = files?.thumbnail[0];
   const payload = { ...req.body };
-  console.log(payload);
+  const product = new Product(payload);
 
+  let variantsId = [];
   if (thumbnail) {
     const thumnailData = await uploadSingleFile(thumbnail);
-    payload.thumbnail = thumnailData.downloadUrl;
+    product.thumbnail = thumnailData.downloadUrl;
   }
-  console.log(payload);
-
-  const product = await Product.create(payload);
-
+  if (req.body.variants) {
+    const variantsBody = JSON.parse(req.body.variants);
+    const insertVariantsData = variantsBody.map((item) => {
+      return {
+        ...item,
+        productId: product._id,
+      };
+    });
+    const newVariants = await ProductVariant.insertMany(insertVariantsData);
+    newVariants.forEach((item) => variantsId.push(item._id));
+  }
+  product.variants = variantsId;
   if (!product) {
     return next(createError(500, MESSAGES.PRODUCT.CREATE_ERROR));
   }
-
+  console.log(product);
+  await product.save();
   return res.json(
     createResponse(true, 201, MESSAGES.PRODUCT.CREATE_SUCCESS, product)
   );
