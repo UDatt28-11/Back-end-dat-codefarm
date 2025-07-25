@@ -12,6 +12,7 @@ import {
 } from "../../common/configs/environments.js";
 import User from "../user/user.model.js";
 import sendEmail from "../../common/utils/mailSender.js";
+import { createCartForUser } from "../cart/cart.service.js";
 
 export const authRegister = handleAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -26,11 +27,8 @@ export const authRegister = handleAsync(async (req, res, next) => {
   const newUser = await User.create({
     ...req.body,
     password: hashedPassword,
-    role: "guest",
+    role: "customer",
   });
-  if (!newUser) {
-    return next(createError(500, MESSAGES.AUTH.REGISTER_FAILED));
-  }
 
   // Verify  email
   const verifyEmailToken = jwt.sign(
@@ -62,6 +60,10 @@ export const authRegister = handleAsync(async (req, res, next) => {
       </div>
     `
   );
+
+  // Thêm giỏ hàng mặc định cho người dùng
+  const cart = await createCartForUser(newUser._id);
+  console.log(cart);
 
   // Respone
   newUser.password = undefined; // Remove password from response
@@ -103,31 +105,37 @@ export const authLogin = handleAsync(async (req, res, next) => {
   if (!existingUser) {
     return next(createError(400, MESSAGES.AUTH.USER_NOT_EXITS));
   }
+
   const isMatch = bcrypt.compareSync(password, existingUser.password);
   if (!isMatch) {
     return next(createError(400, MESSAGES.AUTH.LOGIN_FAILED));
   }
-  // ✅ Kiểm tra xác thực email
+
   if (!existingUser.isVerified) {
     return next(createError(403, MESSAGES.AUTH.EMAIL_NOT_VERIFIED));
   }
-  // Xác thực email thành công thì đăng nhập
 
-  //Generate token
+  const accessToken = jwt.sign(
+    { id: existingUser._id, role: existingUser.role },
+    JWT_SECRET_KEY,
+    {
+      expiresIn: JWT_EXPIRES_IN,
+    }
+  );
 
-  const accessToken = jwt.sign({ id: existingUser._id }, JWT_SECRET_KEY, {
-    expiresIn: JWT_EXPIRES_IN,
-  });
+  return res.status(200).json(
+    createResponse(true, 200, MESSAGES.AUTH.LOGIN_SUCCESS, {
+      user: {
+        id: existingUser._id,
+        fullName: existingUser.fullName,
+        email: existingUser.email,
+        role: existingUser.role,
+        avatar: existingUser.avatar,
+      },
+      accessToken,
+    })
+  );
 
-  if (accessToken) {
-    existingUser.password = undefined;
-    return res.status(200).json(
-      createResponse(true, 200, MESSAGES.AUTH.LOGIN_SUCCESS, {
-        user: existingUser,
-        accessToken,
-      })
-    );
-  }
   return next(createError(500, MESSAGES.AUTH.LOGIN_FAILED));
 });
 

@@ -7,13 +7,16 @@ const productVariantSchema = new mongoose.Schema(
       ref: "Product",
       required: true,
     },
-    attributeValues: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "AttributeValue",
-        required: true,
-      },
-    ],
+    colorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Color",
+      required: true,
+    },
+    sizeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Size",
+      required: true,
+    },
     stock: {
       type: Number,
       required: true,
@@ -25,20 +28,21 @@ const productVariantSchema = new mongoose.Schema(
     oldPrice: {
       type: Number,
     },
-    specifications: {
-      type: Object,
-    },
+    // specifications: {
+    //   type: Object,
+    // },
     soldCount: {
       type: Number,
+      default: 0,
     },
     deletedAt: {
       type: Date,
       default: null,
     },
-    thumbnail: {
-      type: String,
-      required: true,
-    },
+    // thumbnail: {
+    //   type: String,
+    //   required: true,
+    // },
     images: {
       type: [String],
       default: [],

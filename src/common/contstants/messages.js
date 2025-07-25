@@ -31,6 +31,7 @@ const MESSAGES = {
   USER: {
     GET_SUCCESS: "Lấy danh sách người dùng thành công",
     GET_BY_ID_SUCCESS: "Lấy thông tin người dùng thành công",
+    GET_BY_ID_FAIL: "Lấy thông tin người dùng không thành công",
     CREATE_SUCCESS: "Tạo người dùng thành công",
     UPDATE_SUCCESS: "Cập nhật người dùng thành công",
     DELETE_SUCCESS: "Xóa người dùng thành công",
@@ -123,9 +124,14 @@ const MESSAGES = {
     CLEAR_CART_SUCCESS: "Xóa toàn bộ giỏ hàng thành công",
 
     ADD_ITEM_ERROR: "Lỗi khi thêm sản phẩm vào giỏ hàng",
+    NO_ITEM_ERROR: "Không tìm thấy sản phẩm ở trong giỏ hàng",
     UPDATE_ITEM_ERROR: "Lỗi khi cập nhật sản phẩm trong giỏ hàng",
     REMOVE_ITEM_ERROR: "Lỗi khi xóa sản phẩm khỏi giỏ hàng",
     CLEAR_CART_ERROR: "Lỗi khi xóa toàn bộ giỏ hàng",
+    NO_VARIANT: "Không tìm thấy biến thể sản phẩm",
+    ERROR_STOCK: "Số lượng vượt quá tồn kho hiện có",
+    NO_VARIANT_SELECTED:
+      "Vui lòng chọn biến thể sản phẩm trước khi thêm vào giỏ hàng",
   },
 
   ORDER: {
@@ -144,6 +150,16 @@ const MESSAGES = {
     RESTORE_FAILED: "Khôi phục đơn hàng thất bại",
     CREATE_ERROR_EXISTS: "Đơn hàng đã tồn tại",
     NOT_FOUND: "Không tìm thấy đơn hàng",
+  },
+  COMMENT: {
+    CREATE_SUCCESS: "Tạo bình luận thành công",
+    UPDATE_SUCCESS: "Cập nhật bình luận thành công",
+    DELETE_SUCCESS: "Xóa bình luận thành công",
+    APPROVE_SUCCESS: "Duyệt bình luận thành công",
+    GET_SUCCESS: "Lấy thông tin bình luận thành công",
+    NOT_FOUND: "Không tìm thấy bình luận",
+    DELETE_DENIED: "Bạn không có quyền xóa bình luận này",
+    UPDATE_DENIED: "Bạn không có quyền sửa bình luận này",
   },
 
   EMAIL: {

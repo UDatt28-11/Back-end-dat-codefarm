@@ -7,8 +7,12 @@ const productSchema = new mongoose.Schema(
     description: { type: String, default: "" },
     shortDescription: { type: String, default: "" },
     specifications: { type: Object, default: {} },
-    priceDefault: { type: Number, required: true },
+    price: { type: Number, required: true },
     slug: { type: String, required: true, unique: true },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
